@@ -63,27 +63,46 @@ export default class Sketch {
 
   addObjects() {
     let that = this;
-    this.material = new THREE.ShaderMaterial({
-      extensions: {
-        derivatives: "#extension GL_OES_standard_derivatives : enable",
-      },
+    this.material = new THREE.MeshStandardMaterial({
+      // extensions: {
+      //   derivatives: "#extension GL_OES_standard_derivatives : enable",
+      // },
+      color: 'blue',
       side: THREE.DoubleSide,
-      uniforms: {
-        time: { type: "f", value: 0 },
-        resolution: { type: "v4", value: new THREE.Vector4() },
-        uvRate1: {
-          value: new THREE.Vector2(1, 1),
-        },
-      },
+      // uniforms: {
+      //   time: { type: "f", value: 0 },
+      //   resolution: { type: "v4", value: new THREE.Vector4() },
+      //   uvRate1: {
+      //     value: new THREE.Vector2(1, 1),
+      //   },
+      // },
       // wireframe: true,
       // transparent: true,
-      vertexShader: shader.vertex,
-      fragmentShader: shader.fragment,
+      // vertexShader: shader.vertex,
+      // fragmentShader: shader.fragment,
     });
+    const light = new THREE.DirectionalLight('white', 8);
+
+    light.position.set(10, 10, 10);
+    
+    this.scene.add(light)
 
     this.geometry = new THREE.PlaneGeometry(1, 1, 1, 1);
 
     this.plane = new THREE.Mesh(this.geometry, this.material);
+    this.scene.add(this.plane);
+
+
+    this.geometry = new THREE.BoxGeometry(10, 5, 5);
+
+    this.plane = new THREE.Mesh(
+      this.geometry,
+      new THREE.MeshStandardMaterial({        
+        color: "red",
+        // opacity: .7,
+        side: THREE.DoubleSide
+      })
+    );
     this.scene.add(this.plane);
   }
 
@@ -101,7 +120,7 @@ export default class Sketch {
   render() {
     if (!this.isPlaying) return;
     this.time += 0.05;
-    this.material.uniforms.time.value = this.time;
+    // this.material.uniforms.time.value = this.time;
     requestAnimationFrame(this.render.bind(this));
     this.renderer.render(this.scene, this.camera);
   }
